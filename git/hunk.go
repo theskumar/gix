@@ -15,7 +15,7 @@ type Hunk struct {
 }
 
 func ParseHunks() ([]Hunk, error) {
-	cmd := exec.Command("git", "diff", "--cached", "--unified=3")
+	cmd := exec.Command("git", "diff", "--cached", "--unified=3", "--no-ext-diff")
 	var stdout bytes.Buffer
 	cmd.Stdout = &stdout
 
