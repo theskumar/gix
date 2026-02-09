@@ -34,7 +34,7 @@ var commitCmd = &cobra.Command{
 			os.Exit(0)
 		}
 
-		diff, err := git.GetStagedDiff()
+		diff, err := git.GetCompactStagedDiff()
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: failed to read diff: %v\n", err)
 			os.Exit(1)
