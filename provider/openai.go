@@ -110,6 +110,58 @@ func (o *OpenAI) GenerateCommitMessage(diff string) (string, error) {
 	return response.Choices[0].Message.Content, nil
 }
 
+func (o *OpenAI) GenerateChangelog(commitLog string) (string, error) {
+	payload := openaiChatRequest{
+		Model: openaiChatModel,
+		Messages: []openaiMessage{
+			{
+				Role:    "system",
+				Content: ChangelogSystemPrompt,
+			},
+			{
+				Role:    "user",
+				Content: commitLog,
+			},
+		},
+	}
+
+	data, err := json.Marshal(payload)
+	if err != nil {
+		return "", err
+	}
+
+	req, err := http.NewRequest("POST", openaiChatURL, bytes.NewBuffer(data))
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+o.apiKey)
+
+	client := &http.Client{Timeout: 30 * time.Second}
+	res, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		bodyBytes, _ := io.ReadAll(res.Body)
+		return "", fmt.Errorf("OpenAI API error (%s): %s", res.Status, string(bodyBytes))
+	}
+
+	var response openaiChatResponse
+	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
+		return "", err
+	}
+
+	if len(response.Choices) == 0 {
+		return "", errors.New("no response from OpenAI")
+	}
+
+	return response.Choices[0].Message.Content, nil
+}
+
 func (o *OpenAI) GetEmbeddings(texts []string) ([][]float32, error) {
 	reqBody := openaiEmbedRequest{
 		Model: openaiEmbedModel,

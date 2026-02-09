@@ -25,6 +25,7 @@ It runs locally, uses your own API key (OpenAI or Gemini), and fits into your ex
 
 - AI-suggested conventional commit messages
 - `gix split` - split staged diffs into multiple commits
+- `gix changelog` - auto-generate a [Keep a Changelog](https://keepachangelog.com/) entry from commits since the last tag
 - Groups related changes using LLM-based embeddings
 - **Multiple AI providers** - OpenAI or Google Gemini
 - Bring your own API key (no lock-in)
@@ -68,6 +69,20 @@ gix split
 ```
 
 Gix will group commits and ask for confirmation before applying.
+
+### Generate a changelog
+
+```bash
+gix changelog
+gix changelog --from v0.1.0   # from a specific tag
+gix changelog --all            # from the very first commit
+```
+
+Detects the latest semver tag, proposes a version bump based on conventional commits, and generates a changelog entry in [Keep a Changelog](https://keepachangelog.com/) format.
+
+Use `--from` to start from a specific tag, or `--all` to include every commit — useful for bootstrapping a changelog in an existing project.
+
+If your `CHANGELOG.md` has an `## [Unreleased]` section with hand-curated entries, they are preserved and merged into the new version.
 
 ---
 
