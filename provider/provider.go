@@ -2,10 +2,13 @@ package provider
 
 const (
 	// CommitMessageSystemPrompt is the system instruction for generating commit messages
-	CommitMessageSystemPrompt = "You are a concise assistant that only returns a one-line, conventional commit message. No explanations, markdown, or commentary."
+	CommitMessageSystemPrompt = `Generate conventional commit messages: <type>[scope]: <description>
+Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore. Use ! for breaking changes (e.g., feat!:). Keep first line under 72 chars.`
 
 	// CommitMessageUserPromptTemplate is the template for the user prompt when generating commit messages
-	CommitMessageUserPromptTemplate = "Write a single-line conventional commit message that describes the following Git diff. Only return the commit message. Do not include explanations, newlines, or formatting beyond the message itself. Diff:\n\n"
+	CommitMessageUserPromptTemplate = `Generate a conventional commit message for this diff (imperative mood, add body/footers if helpful):
+
+`
 )
 
 // AIProvider abstracts chat completion and embedding capabilities
