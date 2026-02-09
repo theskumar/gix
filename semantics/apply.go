@@ -22,7 +22,7 @@ func ApplyGroups(groups []HunkGroup) error {
 	}()
 
 	for i, group := range groups {
-		fmt.Printf("[commit %d/%d] %s\n", i+1, len(groups), group.Message)
+		fmt.Printf("\n[%d/%d] Creating commit...\n", i+1, len(groups))
 
 		if err := exec.Command("git", "reset").Run(); err != nil {
 			return fmt.Errorf("git reset failed: %w", err)
@@ -41,6 +41,8 @@ func ApplyGroups(groups []HunkGroup) error {
 		if err := exec.Command("git", "commit", "-m", group.Message).Run(); err != nil {
 			return fmt.Errorf("git commit failed: %w", err)
 		}
+
+		fmt.Printf("✓ %s\n", group.Message)
 	}
 
 	return nil
